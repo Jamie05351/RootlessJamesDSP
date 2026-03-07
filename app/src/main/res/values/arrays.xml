@@ -441,13 +441,25 @@
         <item>7</item>
     </string-array>
 
-    <!-- Parametric EQ band-count choices -->
-    <string-array name="peq_band_count_entries" translatable="false">
-        <item>@string/peq_band_count_2way</item>
-        <item>@string/peq_band_count_3way</item>
+    <!-- Crossover mode -->
+    <string-array name="crossover_mode_entries" translatable="false">
+        <item>@string/crossover_mode_2way</item>
+        <item>@string/crossover_mode_3way</item>
     </string-array>
-    <string-array name="peq_band_count_values" translatable="false">
+    <string-array name="crossover_mode_values" translatable="false">
         <item>2</item>
         <item>3</item>
+    </string-array>
+
+    <!-- Crossover filter topology: LR2 (Q=0.5), BW3 (Q=0.577), LR4 (cascaded 2×Q=0.707) -->
+    <string-array name="crossover_filter_entries" translatable="false">
+        <item>@string/crossover_filter_lr2</item>
+        <item>@string/crossover_filter_bw3</item>
+        <item>@string/crossover_filter_lr4</item>
+    </string-array>
+    <string-array name="crossover_filter_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 </resources>

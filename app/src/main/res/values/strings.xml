@@ -654,20 +654,18 @@
     <string name="version_mismatch_root_description">The JamesDSP magisk package installed on your device is outdated and not supported by this app anymore.\n\nPlease retrieve the latest JamesDSP magisk package ZIP and install it via Magisk.\nNote that the magisk package may replace this app with the official JamesDSP app.\n\nDo you want to visit the download website for the Magisk packages now?</string>
     <string name="version_mismatch_root_toast">Failed to start. The installed JamesDSP magisk package is too old and not supported by this app anymore.</string>
 
-    <!-- Parametric EQ -->
+    <!-- Parametric EQ (global) -->
     <string name="peq_enable">Parametric equalizer</string>
-    <string name="peq_band_count">Band setup</string>
-    <string name="peq_band_count_2way">2-band</string>
-    <string name="peq_band_count_3way">3-band</string>
-    <string name="peq_band_1">Band 1</string>
-    <string name="peq_band_2">Band 2</string>
-    <string name="peq_band_3">Band 3 (3-band only)</string>
     <string name="peq_filter_type">Filter type</string>
     <string name="peq_freq">Frequency</string>
     <string name="peq_gain">Gain</string>
     <string name="peq_q">Q factor</string>
-    <string name="peq_polarity">Polarity flip</string>
-    <string name="peq_polarity_summary">Invert phase of this band</string>
+    <string name="peq_filter_1">Filter 1</string>
+    <string name="peq_filter_2">Filter 2</string>
+    <string name="peq_filter_3">Filter 3</string>
+    <string name="peq_filter_4">Filter 4</string>
+    <string name="peq_filter_5">Filter 5</string>
+    <string name="peq_filter_6">Filter 6</string>
     <string name="peq_filter_peak">Peak</string>
     <string name="peq_filter_low_shelf">Low shelf</string>
     <string name="peq_filter_high_shelf">High shelf</string>
@@ -678,12 +676,21 @@
     <string name="peq_filter_band_pass">Band pass</string>
 
     <!-- Crossover -->
-    <string name="crossover_enable">LR2 crossover</string>
-    <string name="crossover_freq">Crossover frequency</string>
-    <string name="crossover_lp_enable">LR2 Low pass</string>
-    <string name="crossover_lp_enable_summary">Apply Linkwitz-Riley 2nd-order low-pass filter</string>
-    <string name="crossover_hp_enable">LR2 High pass</string>
-    <string name="crossover_hp_enable_summary">Apply Linkwitz-Riley 2nd-order high-pass filter</string>
+    <string name="crossover_enable">Crossover</string>
+    <string name="crossover_mode">Crossover mode</string>
+    <string name="crossover_mode_2way">2-way</string>
+    <string name="crossover_mode_3way">3-way</string>
+    <string name="crossover_1_freq">Crossover 1 frequency</string>
+    <string name="crossover_2_freq">Crossover 2 frequency</string>
+    <string name="crossover_filter_type">Filter topology</string>
+    <string name="crossover_filter_lr2">LR2 (Linkwitz-Riley 2nd order)</string>
+    <string name="crossover_filter_bw3">BW3 (Butterworth 3rd order)</string>
+    <string name="crossover_filter_lr4">LR4 (Linkwitz-Riley 4th order)</string>
+    <string name="crossover_low_band">Low band</string>
+    <string name="crossover_mid_band">Mid band</string>
+    <string name="crossover_high_band">High band</string>
+    <string name="crossover_polarity">Polarity flip</string>
+    <string name="crossover_polarity_summary">Invert phase of this band</string>
 
     <!-- Android 15 screenshare restriction warning -->
     <string name="android_15_screenshare_warning_title">Android 15 compatibility notice</string>
