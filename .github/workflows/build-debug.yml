@@ -22,16 +22,18 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build debug APK
-        run: ./gradlew assembleRootlessFullDebug
+        run: ./gradlew assembleRootlessFullDebug --stacktrace --warning-mode none
+
+      - name: List APK outputs
+        if: always()
+        run: find app/build/outputs -name "*.apk" 2>/dev/null || echo "No APKs found"
 
       - name: Upload APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: RootlessJamesDSP-debug
