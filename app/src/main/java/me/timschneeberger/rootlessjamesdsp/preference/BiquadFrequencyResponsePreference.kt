@@ -100,7 +100,7 @@ open class BiquadFrequencyResponsePreference : Preference, SharedPreferences.OnS
         val A = 10.0.pow(f.gain / 40.0)
         val alpha = sinW / (2.0 * f.q)
 
-        val (b0, b1, b2, a0, a1, a2) = when (f.type) {
+        val c: DoubleArray = when (f.type) {
             0 -> doubleArrayOf(         // Peak
                 1 + alpha * A, -2 * cosW, 1 - alpha * A,
                 1 + alpha / A, -2 * cosW, 1 - alpha / A
@@ -150,6 +150,9 @@ open class BiquadFrequencyResponsePreference : Preference, SharedPreferences.OnS
             else -> doubleArrayOf(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
         }
 
+        val b0 = c[0]; val b1 = c[1]; val b2 = c[2]
+        val a0 = c[3]; val a1 = c[4]; val a2 = c[5]
+
         // Evaluate |H(e^jω)|² = |B(e^jω)|² / |A(e^jω)|²
         val bRe = b0 + b1 * cosW + b2 * cos(2 * w)
         val bIm = -(b1 * sinW + b2 * sin(2 * w))
@@ -160,6 +163,4 @@ open class BiquadFrequencyResponsePreference : Preference, SharedPreferences.OnS
         if (aMag2 == 0.0) return 0.0
         return 10.0 * log10((bRe * bRe + bIm * bIm) / aMag2)
     }
-
-    private operator fun DoubleArray.component6() = this[5]
 }
