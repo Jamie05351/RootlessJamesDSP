@@ -5,6 +5,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.pow
+import kotlin.math.tan
 
 /**
  * RBJ Cookbook biquad filter using DF2 Transposed (Direct Form II Transposed) topology.
@@ -137,6 +138,30 @@ class BiquadFilter {
         a1 = na1 / na0
         a2 = na2 / na0
 
+        resetState()
+    }
+
+    /**
+     * Configure as a 1st-order LP or HP filter (bilinear transform).
+     * Used for the 1st-order stage in a BW3 cascade.
+     * b2 and a2 are set to 0, making this a degenerate biquad.
+     */
+    fun configureFirstOrder(isLowPass: Boolean, freqHz: Double, sampleRate: Double) {
+        val k = tan(PI * freqHz / sampleRate)
+        if (isLowPass) {
+            b0 = k / (k + 1.0)
+            b1 = k / (k + 1.0)
+            b2 = 0.0
+            a1 = (k - 1.0) / (k + 1.0)
+            a2 = 0.0
+        } else {
+            b0 =  1.0 / (k + 1.0)
+            b1 = -1.0 / (k + 1.0)
+            b2 = 0.0
+            a1 = (k - 1.0) / (k + 1.0)
+            a2 = 0.0
+        }
+        bypass = false
         resetState()
     }
 
