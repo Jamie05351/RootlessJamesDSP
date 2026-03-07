@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="MaterialSeekbarPreference">
-        <attr name="seekBarIncrement" format="float" />
+        <attr name="seekBarIncrement" />
         <attr name="showSeekBarValue" />
         <attr name="updatesContinuously" />
         <attr name="seekBarStyle" format="reference" />
