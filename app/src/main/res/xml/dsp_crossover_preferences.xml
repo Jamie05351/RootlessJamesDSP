@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <me.timschneeberger.rootlessjamesdsp.preference.SwitchPreferenceGroup
+        android:disableDependentsState="false"
+        android:key="@string/key_crossover_enable"
+        android:title="@string/crossover_enable"
+        android:icon="@drawable/ic_baseline_image_filter_tilt_shift_24dp"
+        app:iconSpaceReserved="false">
+
+        <!-- Crossover frequency -->
+        <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+            android:key="@string/key_crossover_freq"
+            android:title="@string/crossover_freq"
+            android:defaultValue="1000"
+            app:minValue="20"
+            app:maxValue="20000"
+            app:seekBarIncrement="10"
+            app:precision="0"
+            app:unit=" Hz"
+            app:allowDividerAbove="false"
+            app:updatesContinuously="true"
+            app:showSeekBarValue="true"
+            app:iconSpaceReserved="false" />
+
+        <!-- LR2 Low pass -->
+        <SwitchPreferenceCompat
+            android:key="@string/key_crossover_lp_enable"
+            android:title="@string/crossover_lp_enable"
+            android:summary="@string/crossover_lp_enable_summary"
+            android:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+        <!-- LR2 High pass -->
+        <SwitchPreferenceCompat
+            android:key="@string/key_crossover_hp_enable"
+            android:title="@string/crossover_hp_enable"
+            android:summary="@string/crossover_hp_enable_summary"
+            android:defaultValue="true"
+            app:iconSpaceReserved="false" />
+
+    </me.timschneeberger.rootlessjamesdsp.preference.SwitchPreferenceGroup>
+</PreferenceScreen>

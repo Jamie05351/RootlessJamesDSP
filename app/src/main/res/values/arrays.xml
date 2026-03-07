@@ -417,4 +417,37 @@
         <item>spl0</item>
         <item>spl1</item>
     </string-array>
+
+    <!-- Parametric EQ filter types (display) -->
+    <string-array name="peq_filter_types" translatable="false">
+        <item>@string/peq_filter_peak</item>
+        <item>@string/peq_filter_low_shelf</item>
+        <item>@string/peq_filter_high_shelf</item>
+        <item>@string/peq_filter_low_pass</item>
+        <item>@string/peq_filter_high_pass</item>
+        <item>@string/peq_filter_all_pass</item>
+        <item>@string/peq_filter_notch</item>
+        <item>@string/peq_filter_band_pass</item>
+    </string-array>
+    <!-- Parametric EQ filter type values (must match BiquadFilter.Type.id) -->
+    <string-array name="peq_filter_types_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <!-- Parametric EQ band-count choices -->
+    <string-array name="peq_band_count_entries" translatable="false">
+        <item>@string/peq_band_count_2way</item>
+        <item>@string/peq_band_count_3way</item>
+    </string-array>
+    <string-array name="peq_band_count_values" translatable="false">
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

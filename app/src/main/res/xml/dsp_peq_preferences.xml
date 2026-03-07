@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <me.timschneeberger.rootlessjamesdsp.preference.SwitchPreferenceGroup
+        android:disableDependentsState="false"
+        android:key="@string/key_peq_enable"
+        android:title="@string/peq_enable"
+        android:icon="@drawable/ic_tune_vertical_variant_24dp"
+        app:iconSpaceReserved="false">
+
+        <!-- Band setup: 2-band or 3-band -->
+        <ListPreference
+            android:defaultValue="2"
+            android:dialogTitle="@string/peq_band_count"
+            android:entries="@array/peq_band_count_entries"
+            android:entryValues="@array/peq_band_count_values"
+            android:title="@string/peq_band_count"
+            android:key="@string/key_peq_band_count"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <!-- ── Band 1 ── -->
+        <PreferenceCategory
+            android:title="@string/peq_band_1"
+            app:iconSpaceReserved="false">
+
+            <ListPreference
+                android:defaultValue="0"
+                android:dialogTitle="@string/peq_filter_type"
+                android:entries="@array/peq_filter_types"
+                android:entryValues="@array/peq_filter_types_values"
+                android:title="@string/peq_filter_type"
+                android:key="@string/key_peq_band1_type"
+                app:useSimpleSummaryProvider="true"
+                app:iconSpaceReserved="false" />
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_peq_band1_freq"
+                android:title="@string/peq_freq"
+                android:defaultValue="1000"
+                app:minValue="20"
+                app:maxValue="20000"
+                app:seekBarIncrement="10"
+                app:precision="0"
+                app:unit=" Hz"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_peq_band1_gain"
+                android:title="@string/peq_gain"
+                android:defaultValue="0"
+                app:minValue="-20"
+                app:maxValue="20"
+                app:seekBarIncrement="0.5"
+                app:precision="1"
+                app:unit=" dB"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_peq_band1_q"
+                android:title="@string/peq_q"
+                android:defaultValue="1.0"
+                app:minValue="0.1"
+                app:maxValue="10.0"
+                app:seekBarIncrement="0.1"
+                app:precision="2"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <SwitchPreferenceCompat
+                android:key="@string/key_peq_band1_polarity"
+                android:title="@string/peq_polarity"
+                android:summary="@string/peq_polarity_summary"
+                android:defaultValue="false"
+                app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+
+        <!-- ── Band 2 ── -->
+        <PreferenceCategory
+            android:title="@string/peq_band_2"
+            app:iconSpaceReserved="false">
+
+            <ListPreference
+                android:defaultValue="0"
+                android:dialogTitle="@string/peq_filter_type"
+                android:entries="@array/peq_filter_types"
+                android:entryValues="@array/peq_filter_types_values"
+                android:title="@string/peq_filter_type"
+                android:key="@string/key_peq_band2_type"
+                app:useSimpleSummaryProvider="true"
+                app:iconSpaceReserved="false" />
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_peq_band2_freq"
+                android:title="@string/peq_freq"
+                android:defaultValue="4000"
+                app:minValue="20"
+                app:maxValue="20000"
+                app:seekBarIncrement="10"
+                app:precision="0"
+                app:unit=" Hz"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_peq_band2_gain"
+                android:title="@string/peq_gain"
+                android:defaultValue="0"
+                app:minValue="-20"
+                app:maxValue="20"
+                app:seekBarIncrement="0.5"
+                app:precision="1"
+                app:unit=" dB"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_peq_band2_q"
+                android:title="@string/peq_q"
+                android:defaultValue="1.0"
+                app:minValue="0.1"
+                app:maxValue="10.0"
+                app:seekBarIncrement="0.1"
+                app:precision="2"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <SwitchPreferenceCompat
+                android:key="@string/key_peq_band2_polarity"
+                android:title="@string/peq_polarity"
+                android:summary="@string/peq_polarity_summary"
+                android:defaultValue="false"
+                app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+
+        <!-- ── Band 3 (3-band mode only) ── -->
+        <PreferenceCategory
+            android:title="@string/peq_band_3"
+            app:iconSpaceReserved="false">
+
+            <ListPreference
+                android:defaultValue="0"
+                android:dialogTitle="@string/peq_filter_type"
+                android:entries="@array/peq_filter_types"
+                android:entryValues="@array/peq_filter_types_values"
+                android:title="@string/peq_filter_type"
+                android:key="@string/key_peq_band3_type"
+                app:useSimpleSummaryProvider="true"
+                app:iconSpaceReserved="false" />
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_peq_band3_freq"
+                android:title="@string/peq_freq"
+                android:defaultValue="10000"
+                app:minValue="20"
+                app:maxValue="20000"
+                app:seekBarIncrement="10"
+                app:precision="0"
+                app:unit=" Hz"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_peq_band3_gain"
+                android:title="@string/peq_gain"
+                android:defaultValue="0"
+                app:minValue="-20"
+                app:maxValue="20"
+                app:seekBarIncrement="0.5"
+                app:precision="1"
+                app:unit=" dB"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_peq_band3_q"
+                android:title="@string/peq_q"
+                android:defaultValue="1.0"
+                app:minValue="0.1"
+                app:maxValue="10.0"
+                app:seekBarIncrement="0.1"
+                app:precision="2"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <SwitchPreferenceCompat
+                android:key="@string/key_peq_band3_polarity"
+                android:title="@string/peq_polarity"
+                android:summary="@string/peq_polarity_summary"
+                android:defaultValue="false"
+                app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+
+    </me.timschneeberger.rootlessjamesdsp.preference.SwitchPreferenceGroup>
+</PreferenceScreen>

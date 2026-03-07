@@ -654,6 +654,37 @@
     <string name="version_mismatch_root_description">The JamesDSP magisk package installed on your device is outdated and not supported by this app anymore.\n\nPlease retrieve the latest JamesDSP magisk package ZIP and install it via Magisk.\nNote that the magisk package may replace this app with the official JamesDSP app.\n\nDo you want to visit the download website for the Magisk packages now?</string>
     <string name="version_mismatch_root_toast">Failed to start. The installed JamesDSP magisk package is too old and not supported by this app anymore.</string>
 
+    <!-- Parametric EQ -->
+    <string name="peq_enable">Parametric equalizer</string>
+    <string name="peq_band_count">Band setup</string>
+    <string name="peq_band_count_2way">2-band</string>
+    <string name="peq_band_count_3way">3-band</string>
+    <string name="peq_band_1">Band 1</string>
+    <string name="peq_band_2">Band 2</string>
+    <string name="peq_band_3">Band 3 (3-band only)</string>
+    <string name="peq_filter_type">Filter type</string>
+    <string name="peq_freq">Frequency</string>
+    <string name="peq_gain">Gain</string>
+    <string name="peq_q">Q factor</string>
+    <string name="peq_polarity">Polarity flip</string>
+    <string name="peq_polarity_summary">Invert phase of this band</string>
+    <string name="peq_filter_peak">Peak</string>
+    <string name="peq_filter_low_shelf">Low shelf</string>
+    <string name="peq_filter_high_shelf">High shelf</string>
+    <string name="peq_filter_low_pass">Low pass</string>
+    <string name="peq_filter_high_pass">High pass</string>
+    <string name="peq_filter_all_pass">All pass</string>
+    <string name="peq_filter_notch">Notch</string>
+    <string name="peq_filter_band_pass">Band pass</string>
+
+    <!-- Crossover -->
+    <string name="crossover_enable">LR2 crossover</string>
+    <string name="crossover_freq">Crossover frequency</string>
+    <string name="crossover_lp_enable">LR2 Low pass</string>
+    <string name="crossover_lp_enable_summary">Apply Linkwitz-Riley 2nd-order low-pass filter</string>
+    <string name="crossover_hp_enable">LR2 High pass</string>
+    <string name="crossover_hp_enable_summary">Apply Linkwitz-Riley 2nd-order high-pass filter</string>
+
     <!-- Android 15 screenshare restriction warning -->
     <string name="android_15_screenshare_warning_title">Android 15 compatibility notice</string>
     <string name="android_15_screenshare_warning">Android 15 introduces a new screen recording restriction that will redact all sensitive information (e.g. in your notifications) while an app is using the screen record permission.

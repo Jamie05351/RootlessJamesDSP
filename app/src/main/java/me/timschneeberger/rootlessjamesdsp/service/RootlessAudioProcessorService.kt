@@ -31,6 +31,8 @@ import kotlinx.coroutines.SupervisorJob
 import me.timschneeberger.rootlessjamesdsp.BuildConfig
 import me.timschneeberger.rootlessjamesdsp.R
 import me.timschneeberger.rootlessjamesdsp.flavor.CrashlyticsImpl
+import me.timschneeberger.rootlessjamesdsp.dsp.CrossoverProcessor
+import me.timschneeberger.rootlessjamesdsp.dsp.ParametricEqProcessor
 import me.timschneeberger.rootlessjamesdsp.interop.JamesDspLocalEngine
 import me.timschneeberger.rootlessjamesdsp.interop.ProcessorMessageHandler
 import me.timschneeberger.rootlessjamesdsp.model.IEffectSession
@@ -79,6 +81,8 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
     private var recreateRecorderRequested = false
     private var recorderThread: Thread? = null
     private lateinit var engine: JamesDspLocalEngine
+    private lateinit var peqProcessor: ParametricEqProcessor
+    private lateinit var crossoverProcessor: CrossoverProcessor
     private val isRunning: Boolean
         get() = recorderThread != null
 
@@ -130,6 +134,10 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
         // Setup core engine
         engine = JamesDspLocalEngine(this, ProcessorMessageHandler())
         engine.syncWithPreferences()
+
+        // Setup Kotlin-level DSP processors (PEQ + crossover)
+        peqProcessor = ParametricEqProcessor(this)
+        crossoverProcessor = CrossoverProcessor(this)
 
         // Setup general-purpose broadcast receiver
         val filter = IntentFilter()
@@ -283,8 +291,16 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
-                ACTION_SAMPLE_RATE_UPDATED -> engine.syncWithPreferences(arrayOf(Constants.PREF_CONVOLVER))
-                ACTION_PREFERENCES_UPDATED -> engine.syncWithPreferences()
+                ACTION_SAMPLE_RATE_UPDATED -> {
+                    engine.syncWithPreferences(arrayOf(Constants.PREF_CONVOLVER))
+                    peqProcessor.setSampleRate(engine.sampleRate)
+                    crossoverProcessor.setSampleRate(engine.sampleRate)
+                }
+                ACTION_PREFERENCES_UPDATED -> {
+                    engine.syncWithPreferences()
+                    peqProcessor.readAndApplyPreferences()
+                    crossoverProcessor.readAndApplyPreferences()
+                }
                 ACTION_SERVICE_RELOAD_LIVEPROG -> engine.syncWithPreferences(arrayOf(Constants.PREF_LIVEPROG))
                 ACTION_SERVICE_HARD_REBOOT_CORE -> restartRecording()
                 ACTION_SERVICE_SOFT_REBOOT_CORE -> requestAudioRecordRecreation()
@@ -455,6 +471,9 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
             Timber.d("Sampling rate changed to ${sampleRate}Hz")
             engine.sampleRate = sampleRate.toFloat()
         }
+        // Propagate sample rate to Kotlin-level processors and load preferences
+        peqProcessor.setSampleRate(sampleRate.toFloat())
+        crossoverProcessor.setSampleRate(sampleRate.toFloat())
 
         // TODO Move all audio-related code to C++
         recorderThread = Thread {
@@ -519,11 +538,17 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
                     if(encoding == AudioEncoding.PcmShort) {
                         recorder.read(shortBuffer, 0, shortBuffer.size, AudioRecord.READ_BLOCKING)
                         engine.processInt16(shortBuffer, shortOutBuffer)
+                        val frames16 = shortOutBuffer.size / 2
+                        peqProcessor.process(shortOutBuffer, frames16)
+                        crossoverProcessor.process(shortOutBuffer, frames16)
                         track.write(shortOutBuffer, 0, shortOutBuffer.size, AudioTrack.WRITE_BLOCKING)
                     }
                     else {
                         recorder.read(floatBuffer, 0, floatBuffer.size, AudioRecord.READ_BLOCKING)
                         engine.processFloat(floatBuffer, floatOutBuffer)
+                        val framesFloat = floatOutBuffer.size / 2
+                        peqProcessor.process(floatOutBuffer, framesFloat)
+                        crossoverProcessor.process(floatOutBuffer, framesFloat)
                         track.write(floatOutBuffer, 0, floatOutBuffer.size, AudioTrack.WRITE_BLOCKING)
                     }
                 }

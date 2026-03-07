@@ -131,4 +131,36 @@
     <string name="key_limiter_threshold" translatable="false">limiter_threshold</string>
     <string name="key_limiter_release" translatable="false">limiter_release</string>
     <string name="key_output_postgain" translatable="false">output_postgain</string>
+
+    <!-- Parametric EQ -->
+    <string name="key_peq_enable" translatable="false">peq_enable</string>
+    <string name="key_peq_band_count" translatable="false">peq_band_count</string>
+    <!-- Band keys use printf-style index: peq_band_1_type, peq_band_2_type, etc. -->
+    <string name="key_peq_band_type" translatable="false">peq_band_%d_type</string>
+    <string name="key_peq_band_freq" translatable="false">peq_band_%d_freq</string>
+    <string name="key_peq_band_gain" translatable="false">peq_band_%d_gain</string>
+    <string name="key_peq_band_q" translatable="false">peq_band_%d_q</string>
+    <string name="key_peq_band_polarity" translatable="false">peq_band_%d_polarity</string>
+    <!-- Static keys for each band (used in preference XML) -->
+    <string name="key_peq_band1_type" translatable="false">peq_band_1_type</string>
+    <string name="key_peq_band1_freq" translatable="false">peq_band_1_freq</string>
+    <string name="key_peq_band1_gain" translatable="false">peq_band_1_gain</string>
+    <string name="key_peq_band1_q" translatable="false">peq_band_1_q</string>
+    <string name="key_peq_band1_polarity" translatable="false">peq_band_1_polarity</string>
+    <string name="key_peq_band2_type" translatable="false">peq_band_2_type</string>
+    <string name="key_peq_band2_freq" translatable="false">peq_band_2_freq</string>
+    <string name="key_peq_band2_gain" translatable="false">peq_band_2_gain</string>
+    <string name="key_peq_band2_q" translatable="false">peq_band_2_q</string>
+    <string name="key_peq_band2_polarity" translatable="false">peq_band_2_polarity</string>
+    <string name="key_peq_band3_type" translatable="false">peq_band_3_type</string>
+    <string name="key_peq_band3_freq" translatable="false">peq_band_3_freq</string>
+    <string name="key_peq_band3_gain" translatable="false">peq_band_3_gain</string>
+    <string name="key_peq_band3_q" translatable="false">peq_band_3_q</string>
+    <string name="key_peq_band3_polarity" translatable="false">peq_band_3_polarity</string>
+
+    <!-- Crossover -->
+    <string name="key_crossover_enable" translatable="false">crossover_enable</string>
+    <string name="key_crossover_freq" translatable="false">crossover_freq</string>
+    <string name="key_crossover_lp_enable" translatable="false">crossover_lp_enable</string>
+    <string name="key_crossover_hp_enable" translatable="false">crossover_hp_enable</string>
 </resources>

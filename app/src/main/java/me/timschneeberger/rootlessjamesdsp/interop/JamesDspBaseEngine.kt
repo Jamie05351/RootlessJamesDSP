@@ -130,6 +130,8 @@ abstract class JamesDspBaseEngine(val context: Context, val callbacks: JamesDspW
                     Constants.PREF_DDC -> setVdc(ddcEnabled, ddcFile)
                     Constants.PREF_LIVEPROG -> setLiveprog(liveProgEnabled, liveprogFile)
                     Constants.PREF_CONVOLVER -> setConvolver(convolverEnabled, convolverFile, convolverMode, convolverAdvImp)
+                    // PEQ and crossover are handled by Kotlin-level processors in the service
+                    Constants.PREF_PEQ, Constants.PREF_CROSSOVER -> true
                     else -> true
                 }
 
