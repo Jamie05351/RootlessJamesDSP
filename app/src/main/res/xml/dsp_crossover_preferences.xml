@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <me.timschneeberger.rootlessjamesdsp.preference.SwitchPreferenceGroup
+        android:disableDependentsState="false"
+        android:key="@string/key_crossover_enable"
+        android:title="@string/crossover_enable"
+        android:icon="@drawable/ic_baseline_image_filter_tilt_shift_24dp"
+        app:iconSpaceReserved="false">
+
+        <!-- Live crossover response graph -->
+        <me.timschneeberger.rootlessjamesdsp.preference.BiquadFrequencyResponsePreference
+            android:key="crossover_response_graph"
+            app:iconSpaceReserved="false" />
+
+        <!-- 2-way / 3-way selector -->
+        <ListPreference
+            android:key="@string/key_crossover_mode"
+            android:title="@string/crossover_mode"
+            android:defaultValue="2"
+            android:dialogTitle="@string/crossover_mode"
+            android:entries="@array/crossover_mode_entries"
+            android:entryValues="@array/crossover_mode_values"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <!-- ── Crossover point 1 (low / mid split) ── -->
+        <PreferenceCategory
+            android:title="@string/crossover_1_freq"
+            app:iconSpaceReserved="false">
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_crossover_1_freq"
+                android:title="@string/crossover_1_freq"
+                android:defaultValue="500"
+                app:minValue="20"
+                app:maxValue="20000"
+                app:seekBarIncrement="10"
+                app:precision="0"
+                app:unit=" Hz"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <ListPreference
+                android:key="@string/key_crossover_1_type"
+                android:title="@string/crossover_filter_type"
+                android:defaultValue="0"
+                android:dialogTitle="@string/crossover_filter_type"
+                android:entries="@array/crossover_filter_entries"
+                android:entryValues="@array/crossover_filter_values"
+                app:useSimpleSummaryProvider="true"
+                app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+
+        <!-- ── Crossover point 2 (mid / high split — 3-way only) ── -->
+        <PreferenceCategory
+            android:title="@string/crossover_2_freq"
+            app:iconSpaceReserved="false">
+
+            <me.timschneeberger.rootlessjamesdsp.preference.MaterialSeekbarPreference
+                android:key="@string/key_crossover_2_freq"
+                android:title="@string/crossover_2_freq"
+                android:defaultValue="4000"
+                app:minValue="20"
+                app:maxValue="20000"
+                app:seekBarIncrement="10"
+                app:precision="0"
+                app:unit=" Hz"
+                app:allowDividerAbove="false"
+                app:updatesContinuously="true"
+                app:showSeekBarValue="true"
+                app:iconSpaceReserved="false" />
+
+            <ListPreference
+                android:key="@string/key_crossover_2_type"
+                android:title="@string/crossover_filter_type"
+                android:defaultValue="0"
+                android:dialogTitle="@string/crossover_filter_type"
+                android:entries="@array/crossover_filter_entries"
+                android:entryValues="@array/crossover_filter_values"
+                app:useSimpleSummaryProvider="true"
+                app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+
+        <!-- ── Per-band polarity ── -->
+        <PreferenceCategory
+            app:iconSpaceReserved="false">
+
+            <SwitchPreferenceCompat
+                android:key="@string/key_crossover_low_polarity"
+                android:title="@string/crossover_low_band"
+                android:summary="@string/crossover_polarity_summary"
+                android:defaultValue="false"
+                app:iconSpaceReserved="false" />
+
+            <SwitchPreferenceCompat
+                android:key="@string/key_crossover_mid_polarity"
+                android:title="@string/crossover_mid_band"
+                android:summary="@string/crossover_polarity_summary"
+                android:defaultValue="false"
+                app:iconSpaceReserved="false" />
+
+            <SwitchPreferenceCompat
+                android:key="@string/key_crossover_high_polarity"
+                android:title="@string/crossover_high_band"
+                android:summary="@string/crossover_polarity_summary"
+                android:defaultValue="false"
+                app:iconSpaceReserved="false" />
+        </PreferenceCategory>
+
+    </me.timschneeberger.rootlessjamesdsp.preference.SwitchPreferenceGroup>
+</PreferenceScreen>

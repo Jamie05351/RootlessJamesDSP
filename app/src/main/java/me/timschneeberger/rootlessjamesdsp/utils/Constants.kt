@@ -20,6 +20,8 @@ object Constants {
     const val PREF_REVERB = "dsp_reverb"
     const val PREF_STEREOWIDE = "dsp_stereowide"
     const val PREF_TUBE = "dsp_tube"
+    const val PREF_PEQ = "dsp_peq"
+    const val PREF_CROSSOVER = "dsp_crossover"
 
     // Default string values
     const val DEFAULT_CONVOLVER_ADVIMP = "-80;-100;0;0;0;0"

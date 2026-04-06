@@ -417,4 +417,49 @@
         <item>spl0</item>
         <item>spl1</item>
     </string-array>
+
+    <!-- Parametric EQ filter types (display) -->
+    <string-array name="peq_filter_types" translatable="false">
+        <item>@string/peq_filter_peak</item>
+        <item>@string/peq_filter_low_shelf</item>
+        <item>@string/peq_filter_high_shelf</item>
+        <item>@string/peq_filter_low_pass</item>
+        <item>@string/peq_filter_high_pass</item>
+        <item>@string/peq_filter_all_pass</item>
+        <item>@string/peq_filter_notch</item>
+        <item>@string/peq_filter_band_pass</item>
+    </string-array>
+    <!-- Parametric EQ filter type values (must match BiquadFilter.Type.id) -->
+    <string-array name="peq_filter_types_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <!-- Crossover mode -->
+    <string-array name="crossover_mode_entries" translatable="false">
+        <item>@string/crossover_mode_2way</item>
+        <item>@string/crossover_mode_3way</item>
+    </string-array>
+    <string-array name="crossover_mode_values" translatable="false">
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <!-- Crossover filter topology: LR2 (Q=0.5), BW3 (Q=0.577), LR4 (cascaded 2×Q=0.707) -->
+    <string-array name="crossover_filter_entries" translatable="false">
+        <item>@string/crossover_filter_lr2</item>
+        <item>@string/crossover_filter_bw3</item>
+        <item>@string/crossover_filter_lr4</item>
+    </string-array>
+    <string-array name="crossover_filter_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

@@ -120,6 +120,14 @@ class DspFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListen
                 R.id.card_reverb, PreferenceGroupFragment.newInstance(Constants.PREF_REVERB,
                     R.xml.dsp_reverb_preferences
                 ))
+            .replace(
+                R.id.card_peq, PreferenceGroupFragment.newInstance(Constants.PREF_PEQ,
+                    R.xml.dsp_peq_preferences
+                ))
+            .replace(
+                R.id.card_crossover, PreferenceGroupFragment.newInstance(Constants.PREF_CROSSOVER,
+                    R.xml.dsp_crossover_preferences
+                ))
             .commit()
 
         // Load initial preferences
