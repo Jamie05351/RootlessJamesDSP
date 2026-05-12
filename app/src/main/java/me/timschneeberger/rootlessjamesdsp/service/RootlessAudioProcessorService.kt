@@ -435,13 +435,22 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
         }
 
         // Load preferences
+        val channelMask = preferences.get<String>(R.string.key_audioformat_channels)
+            .toIntOrNull() ?: AudioFormat.CHANNEL_OUT_STEREO
+        val outputChannelCount = Integer.bitCount(channelMask).coerceAtLeast(1)
         val encoding = AudioEncoding.fromInt(
             preferences.get<String>(R.string.key_audioformat_encoding).toIntOrNull() ?: 1
         )
         val bufferSize = preferences.get<Float>(R.string.key_audioformat_buffersize).toInt()
+        val bufferFrames = bufferSize / 2
+        val outputBufferSize = bufferFrames * outputChannelCount
         val bufferSizeBytes = when (encoding) {
             AudioEncoding.PcmFloat -> bufferSize * Float.SIZE_BYTES
             else -> bufferSize * Short.SIZE_BYTES
+        }
+        val outputBufferSizeBytes = when (encoding) {
+            AudioEncoding.PcmFloat -> outputBufferSize * Float.SIZE_BYTES
+            else -> outputBufferSize * Short.SIZE_BYTES
         }
         val encodingFormat = when (encoding) {
             AudioEncoding.PcmShort -> AudioFormat.ENCODING_PCM_16BIT
@@ -450,7 +459,9 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
         val sampleRate = clamp(determineSamplingRate(), 44100, 48000)
 
         Timber.i("Sample rate: $sampleRate; Encoding: ${encoding.name}; " +
-                "Buffer size: $bufferSize; Buffer size (bytes): $bufferSizeBytes ; " +
+                "Output channel mask: $channelMask; Output channel count: $outputChannelCount; " +
+                "Buffer size: $bufferSize; Buffer size (bytes): $bufferSizeBytes; " +
+                "Output buffer size: $outputBufferSize; Output buffer size (bytes): $outputBufferSizeBytes; " +
                 "HAL buffer size (bytes): ${determineBufferSize()}")
 
         // Create recorder and track
@@ -458,7 +469,7 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
         val track: AudioTrack
         try {
             recorder = buildAudioRecord(encodingFormat, sampleRate, bufferSizeBytes)
-            track = buildAudioTrack(encodingFormat, sampleRate, bufferSizeBytes)
+            track = buildAudioTrack(channelMask, encodingFormat, sampleRate, outputBufferSizeBytes)
         }
         catch(ex: Exception) {
             Timber.e("Failed to create initial audio record/track")
@@ -482,8 +493,10 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
 
                 val floatBuffer = FloatArray(bufferSize)
                 val floatOutBuffer = FloatArray(bufferSize)
+                val floatTrackBuffer = FloatArray(outputBufferSize)
                 val shortBuffer = ShortArray(bufferSize)
                 val shortOutBuffer = ShortArray(bufferSize)
+                val shortTrackBuffer = ShortArray(outputBufferSize)
                 while (!isProcessorDisposing) {
                     if(recreateRecorderRequested) {
                         recreateRecorderRequested = false
@@ -541,7 +554,13 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
                         val frames16 = shortOutBuffer.size / 2
                         peqProcessor.process(shortOutBuffer, frames16)
                         crossoverProcessor.process(shortOutBuffer, frames16)
-                        track.write(shortOutBuffer, 0, shortOutBuffer.size, AudioTrack.WRITE_BLOCKING)
+                        if(outputChannelCount == 2) {
+                            track.write(shortOutBuffer, 0, shortOutBuffer.size, AudioTrack.WRITE_BLOCKING)
+                        }
+                        else {
+                            expandStereoToOutput(shortOutBuffer, shortTrackBuffer, outputChannelCount)
+                            track.write(shortTrackBuffer, 0, shortTrackBuffer.size, AudioTrack.WRITE_BLOCKING)
+                        }
                     }
                     else {
                         recorder.read(floatBuffer, 0, floatBuffer.size, AudioRecord.READ_BLOCKING)
@@ -549,7 +568,13 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
                         val framesFloat = floatOutBuffer.size / 2
                         peqProcessor.process(floatOutBuffer, framesFloat)
                         crossoverProcessor.process(floatOutBuffer, framesFloat)
-                        track.write(floatOutBuffer, 0, floatOutBuffer.size, AudioTrack.WRITE_BLOCKING)
+                        if(outputChannelCount == 2) {
+                            track.write(floatOutBuffer, 0, floatOutBuffer.size, AudioTrack.WRITE_BLOCKING)
+                        }
+                        else {
+                            expandStereoToOutput(floatOutBuffer, floatTrackBuffer, outputChannelCount)
+                            track.write(floatTrackBuffer, 0, floatTrackBuffer.size, AudioTrack.WRITE_BLOCKING)
+                        }
                     }
                 }
             } catch (e: IOException) {
@@ -598,7 +623,53 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
         startRecording()
     }
 
-    private fun buildAudioTrack(encoding: Int, sampleRate: Int, bufferSizeBytes: Int): AudioTrack {
+    private fun expandStereoToOutput(input: FloatArray, output: FloatArray, outputChannelCount: Int) {
+        var inputIndex = 0
+        var outputIndex = 0
+        while(inputIndex + 1 < input.size && outputIndex + outputChannelCount <= output.size) {
+            val left = input[inputIndex]
+            val right = input[inputIndex + 1]
+            if(outputChannelCount == 1) {
+                output[outputIndex] = (left + right) * 0.5f
+            }
+            else {
+                output[outputIndex] = left
+                output[outputIndex + 1] = right
+                var channel = 2
+                while(channel < outputChannelCount) {
+                    output[outputIndex + channel] = 0f
+                    channel++
+                }
+            }
+            inputIndex += 2
+            outputIndex += outputChannelCount
+        }
+    }
+
+    private fun expandStereoToOutput(input: ShortArray, output: ShortArray, outputChannelCount: Int) {
+        var inputIndex = 0
+        var outputIndex = 0
+        while(inputIndex + 1 < input.size && outputIndex + outputChannelCount <= output.size) {
+            val left = input[inputIndex].toInt()
+            val right = input[inputIndex + 1].toInt()
+            if(outputChannelCount == 1) {
+                output[outputIndex] = ((left + right) / 2).toShort()
+            }
+            else {
+                output[outputIndex] = left.toShort()
+                output[outputIndex + 1] = right.toShort()
+                var channel = 2
+                while(channel < outputChannelCount) {
+                    output[outputIndex + channel] = 0
+                    channel++
+                }
+            }
+            inputIndex += 2
+            outputIndex += outputChannelCount
+        }
+    }
+
+    private fun buildAudioTrack(channelMask: Int, encoding: Int, sampleRate: Int, bufferSizeBytes: Int): AudioTrack {
         val attributesBuilder = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_UNKNOWN)
             .setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
@@ -609,24 +680,26 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
         }
 
         val format = AudioFormat.Builder()
-            .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
+            .setChannelMask(channelMask)
             .setEncoding(encoding)
             .setSampleRate(sampleRate)
             .build()
 
-        val frameSizeInBytes: Int = if (encoding == AudioFormat.ENCODING_PCM_16BIT) {
-            2 /* channels */ * 2 /* bytes */
-        } else {
-            2 /* channels */ * 4 /* bytes */
-        }
+        val frameSizeInBytes = format.frameSizeInBytes
+        val minimumBufferSize = AudioTrack.getMinBufferSize(sampleRate, channelMask, encoding)
 
-        val bufferSize = if (((bufferSizeBytes % frameSizeInBytes) != 0 || bufferSizeBytes < 1)) {
+        var bufferSize = if (((bufferSizeBytes % frameSizeInBytes) != 0 || bufferSizeBytes < 1)) {
             Timber.e("Invalid audio buffer size $bufferSizeBytes")
             128 * (bufferSizeBytes / 128)
         }
         else bufferSizeBytes
 
-        Timber.d("Using buffer size $bufferSize")
+        if(bufferSize < minimumBufferSize) {
+            Timber.w("Buffer size too small. Setting to minimum.")
+            bufferSize = minimumBufferSize
+        }
+
+        Timber.d("Using output channel mask $channelMask; frame size $frameSizeInBytes; buffer size $bufferSize")
 
         return AudioTrack.Builder()
             .setAudioFormat(format)
