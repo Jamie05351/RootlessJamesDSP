@@ -31,6 +31,7 @@ import kotlinx.coroutines.SupervisorJob
 import me.timschneeberger.rootlessjamesdsp.BuildConfig
 import me.timschneeberger.rootlessjamesdsp.R
 import me.timschneeberger.rootlessjamesdsp.flavor.CrashlyticsImpl
+import me.timschneeberger.rootlessjamesdsp.dsp.BmwE60Processor
 import me.timschneeberger.rootlessjamesdsp.dsp.CrossoverProcessor
 import me.timschneeberger.rootlessjamesdsp.dsp.ParametricEqProcessor
 import me.timschneeberger.rootlessjamesdsp.interop.JamesDspLocalEngine
@@ -83,6 +84,7 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
     private lateinit var engine: JamesDspLocalEngine
     private lateinit var peqProcessor: ParametricEqProcessor
     private lateinit var crossoverProcessor: CrossoverProcessor
+    private lateinit var bmwE60Processor: BmwE60Processor
     private val isRunning: Boolean
         get() = recorderThread != null
 
@@ -135,9 +137,10 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
         engine = JamesDspLocalEngine(this, ProcessorMessageHandler())
         engine.syncWithPreferences()
 
-        // Setup Kotlin-level DSP processors (PEQ + crossover)
+        // Setup Kotlin-level DSP processors
         peqProcessor = ParametricEqProcessor(this)
         crossoverProcessor = CrossoverProcessor(this)
+        bmwE60Processor = BmwE60Processor()
 
         // Setup general-purpose broadcast receiver
         val filter = IntentFilter()
@@ -295,11 +298,13 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
                     engine.syncWithPreferences(arrayOf(Constants.PREF_CONVOLVER))
                     peqProcessor.setSampleRate(engine.sampleRate)
                     crossoverProcessor.setSampleRate(engine.sampleRate)
+                    bmwE60Processor.setSampleRate(engine.sampleRate)
                 }
                 ACTION_PREFERENCES_UPDATED -> {
                     engine.syncWithPreferences()
                     peqProcessor.readAndApplyPreferences()
                     crossoverProcessor.readAndApplyPreferences()
+                    bmwE60Processor.rebuild()
                 }
                 ACTION_SERVICE_RELOAD_LIVEPROG -> engine.syncWithPreferences(arrayOf(Constants.PREF_LIVEPROG))
                 ACTION_SERVICE_HARD_REBOOT_CORE -> restartRecording()
@@ -474,6 +479,7 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
         // Propagate sample rate to Kotlin-level processors and load preferences
         peqProcessor.setSampleRate(sampleRate.toFloat())
         crossoverProcessor.setSampleRate(sampleRate.toFloat())
+        bmwE60Processor.setSampleRate(sampleRate.toFloat())
 
         // TODO Move all audio-related code to C++
         recorderThread = Thread {
@@ -541,6 +547,7 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
                         val frames16 = shortOutBuffer.size / 2
                         peqProcessor.process(shortOutBuffer, frames16)
                         crossoverProcessor.process(shortOutBuffer, frames16)
+                        bmwE60Processor.process(shortOutBuffer, frames16)
                         track.write(shortOutBuffer, 0, shortOutBuffer.size, AudioTrack.WRITE_BLOCKING)
                     }
                     else {
@@ -549,6 +556,7 @@ class RootlessAudioProcessorService : BaseAudioProcessorService() {
                         val framesFloat = floatOutBuffer.size / 2
                         peqProcessor.process(floatOutBuffer, framesFloat)
                         crossoverProcessor.process(floatOutBuffer, framesFloat)
+                        bmwE60Processor.process(floatOutBuffer, framesFloat)
                         track.write(floatOutBuffer, 0, floatOutBuffer.size, AudioTrack.WRITE_BLOCKING)
                     }
                 }
