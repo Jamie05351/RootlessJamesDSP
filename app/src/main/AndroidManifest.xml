@@ -75,11 +75,6 @@
                 <data android:scheme="content" />
                 <data android:mimeType="*/*" />
 
-                <!--
-                    Work around Android's ugly primitive PatternMatcher
-                    implementation that can't cope with finding a . early in
-                    the path unless it's explicitly matched.
-                -->
                 <data android:host="*" />
                 <data android:pathPattern=".*\\.vdc" />
                 <data android:pathPattern=".*\\..*\\.vdc" />
@@ -211,7 +206,6 @@
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />
 
-        <!-- Root only: FGS service permission is granted in root/AndroidManifest.xml -->
         <service
             android:name=".service.RootAudioProcessorService"
             android:enabled="true"
@@ -281,6 +275,16 @@
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="me.timschneeberger.rootlessjamesdsp.SET_POWER_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receiver.ExternalPeqUpdateReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="me.timschneeberger.rootlessjamesdsp.SET_PEQ" />
             </intent-filter>
         </receiver>
 
