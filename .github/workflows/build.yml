@@ -78,6 +78,7 @@ jobs:
           echo "VERSION_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
        
       - name: Sign APKs
+        if: startsWith(github.ref, 'refs/tags/')
         uses: ilharp/sign-android-release@v1.0.4
         with:
           buildToolsVersion: 35.0.0
@@ -87,7 +88,8 @@ jobs:
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Rename build artifacts
+      - name: Rename signed build artifacts
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           set -e
           ls -l app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}
@@ -99,31 +101,41 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: "${{ matrix.flavor }}JamesDSP-universal-preview_apk"
-          path: app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*universal-${{ env.BUILD_TYPE }}-signed.apk
+          path: |
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*universal-${{ env.BUILD_TYPE }}.apk
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*universal-${{ env.BUILD_TYPE }}-signed.apk
 
       - name: Upload build artifact (x86)
         uses: actions/upload-artifact@v4
         with:
           name: "${{ matrix.flavor }}JamesDSP-x86-preview_apk"
-          path: app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*x86-${{ env.BUILD_TYPE }}-signed.apk
+          path: |
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*x86-${{ env.BUILD_TYPE }}.apk
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*x86-${{ env.BUILD_TYPE }}-signed.apk
           
       - name: Upload build artifact (x86_64)
         uses: actions/upload-artifact@v4
         with:
           name: "${{ matrix.flavor }}JamesDSP-x86_64-preview_apk"
-          path: app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*x86_64-${{ env.BUILD_TYPE }}-signed.apk
+          path: |
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*x86_64-${{ env.BUILD_TYPE }}.apk
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*x86_64-${{ env.BUILD_TYPE }}-signed.apk
           
       - name: Upload build artifact (armeabi-v7a)
         uses: actions/upload-artifact@v4
         with:
           name: "${{ matrix.flavor }}JamesDSP-armeabi-v7a-preview_apk"
-          path: app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*armeabi-v7a-${{ env.BUILD_TYPE }}-signed.apk
+          path: |
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*armeabi-v7a-${{ env.BUILD_TYPE }}.apk
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*armeabi-v7a-${{ env.BUILD_TYPE }}-signed.apk
                
       - name: Upload build artifact (arm64-v8a)
         uses: actions/upload-artifact@v4
         with:
           name: "${{ matrix.flavor }}JamesDSP-arm64-v8a-preview_apk"
-          path: app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*arm64-v8a-${{ env.BUILD_TYPE }}-signed.apk
+          path: |
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*arm64-v8a-${{ env.BUILD_TYPE }}.apk
+            app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}/*arm64-v8a-${{ env.BUILD_TYPE }}-signed.apk
        
       - name: Deploy root flavor APKs to the server
         if: ${{ steps.flavor.outputs.lowercase == 'root' && startsWith(github.ref, 'refs/tags/') && github.repository == 'timschneeb/RootlessJamesDSP' }}
@@ -148,6 +160,7 @@ jobs:
           include-compare: true
           
       - name: Read changelog template
+        if: startsWith(github.ref, 'refs/tags/')
         id: changelog_post
         uses: andstor/file-reader-action@v1
         with:
