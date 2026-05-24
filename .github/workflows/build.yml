@@ -81,6 +81,7 @@ jobs:
           echo "VERSION_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
        
       - name: Sign APKs
+        if: startsWith(github.ref, 'refs/tags/')
         uses: ilharp/sign-android-release@v1.0.4
         with:
           buildToolsVersion: 35.0.0
@@ -91,6 +92,7 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Rename signed build artifacts
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           set -e
           ls -l app/build/outputs/apk/${{ steps.flavor.outputs.lowercase }}Full/${{ env.BUILD_TYPE }}
